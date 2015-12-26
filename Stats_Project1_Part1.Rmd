@@ -1,5 +1,5 @@
 ---
-title: "Statistical Inference - Project Part 1"
+title: "Examining the Central Limit Theorem using the Exponential Distribution"
 author: "Jack Gidding"
 date: "December 22, 2015"
 output: pdf_document
@@ -7,11 +7,11 @@ output: pdf_document
 
 ## Overview
 
-This project uses simulation to explore the exponential distribution in R. There are two segments of the project. First, simulate randow draws from the exponential distribution. Second, perform inferential data analysis on the simulation data. This report will look at the sample mean and sample variance versus the theoretical mean and theoretical variance for the distribution. 
+This project uses simulation to explore the exponential distribution in R and the Central Limit Theorem (CLT). There are two segments of the project. First, simulate randow draws from the exponential distribution. Second, perform inferential data analysis on the simulation data and compare to the Normal Distribution from the CLT. This report will look at the sample mean and sample variance versus the theoretical mean and theoretical variance for the exponential distribution. 
 
 The probability distribution function (PDF) for the exponential distribution is:  P(x) = $\lambda$ $\rm{e}^{-\lambda t}$. The first moment, mean, is $\mu$ = 1/$\lambda$. The second moment, variance, is also $\sigma^2$ = 1/$\lambda$.
 
-The required libraries are loaded.
+Libraries used in this experiment are loaded.
 
 ```{r libs, warning=FALSE,message=FALSE}
 library(plyr)
@@ -23,7 +23,7 @@ simulations <- 1000
 draws <- 40
 lambda <- 0.2
 ```
-For the experiment, we run `r simulations` simulations of `r draws` draws each from the exponential distribution using a lambda of `r lambda` for the distribution.  The experiment is run. From each simulation, the mean of `r draws` draws is calculated. This is our sample population. A data frame is created with the means of each simulation. A histogram of the means is plotted to examine the distribution of the sample means. 
+For the experiment, we run `r simulations` simulations of `r draws` draws each from the exponential distribution using a lambda of `r lambda` for the exponential distribution.  The experiment is run. From each simulation, the mean of `r draws` draws is calculated and collected for all simulations. This is our sample population. A data frame is created with the means of each simulation. A histogram of the means is plotted to examine the distribution of the sample means. 
 ```{r echo=FALSE}
 plotfn <- function(vals, lmd) {
     plot1 <- ggplot(simdata, aes(x = simdata)) +
@@ -51,7 +51,7 @@ simdata.mean <- mean(simdata$simdata)
 # Calculate the theoretical mean (mu)
 expdist.mean <- 1/lambda
 ```
-In the diagram above, the red solid line shows the theoretical mean of the exponential distribution and the red dotted line shows the mean of the sample population. The theoretical mean of the exponential distributions, $\mu$, is $\mu$ = 1/$\lambda$ = `r expdist.mean`. The mean of the sample population, $\bar{x}$ = `r simdata.mean`. The difference between the two values is very small: $\mu$ - $\bar{x}$ = `r expdist.mean-simdata.mean`. The percentage error in this amount is `r ((expdist.mean-simdata.mean)/expdist.mean)*100`%, which indicates this is a good representation.
+In the diagram above, the red solid line shows the theoretical mean of the exponential distribution and the red dotted line shows the mean of the sample population. The theoretical mean of the exponential distributions, $\mu$, is $\mu$ = 1/$\lambda$ = `r expdist.mean`. The mean of the sample population, $\bar{x}$ = `r simdata.mean`. The difference between the two values is very small: $\mu$ - $\bar{x}$ = `r expdist.mean-simdata.mean`. The percentage difference between the two values is `r ((expdist.mean-simdata.mean)/expdist.mean)*100`%. 
 
 ## Sample Variance versus Theoretical Variance
 
@@ -62,7 +62,7 @@ simdata.var <- var(simdata$simdata)
 # Calculate the theoretical variance (E[x bar] = sigma^2/n)
 expdist.var <- expdist.mean^2/draws
 ```
-The theoretical variance of the means of draws from the exponential distribution, $\sigma^{2}$, is $\sigma^{2}$ = (1/n) $\lambda^{-2}$ = `r expdist.var`. The variance of the sample population, $\rm{s}^{2}$ = `r simdata.var`. The difference between the two values is very small: $\sigma^{2}$ - $\rm{s}^{2}$ = `r expdist.var-simdata.var`. The percentage error in this amount is `r ((expdist.var-simdata.var)/expdist.var)*100`%, which indicates this is a good representation.
+The theoretical variance of the means of draws from the exponential distribution, Var($\bar{x}$) = (1/n) $\lambda^{-2}$ = `r expdist.var`. The variance of the sample population, $\rm{s}^{2}$ = `r simdata.var`. The difference between the two values is very small: Var($\bar{x}$) - $\rm{s}^{2}$ = `r expdist.var-simdata.var`. The percentage error in this amount is `r ((expdist.var-simdata.var)/expdist.var)*100`%.
 
 ## Distribution
 ```{r echo=FALSE}
@@ -86,7 +86,7 @@ plotdist <- function(dst, lmd, nmean, nvar) {
 }
 
 ```
-A histogram of the means is again plotted to examine the distribution of the sample means. In the plot below, the histogram was adjusted for y to be between 0 and 1. This enabled an overlay of the Normal Distribution `r paste("N(",expdist.mean,",",expdist.var,")",sep="")` in red as defined by the Central Limit Theorem. A curve is fit to the sample distribution is overlayed in blue. This graph shows that the distribution is approximately normal as stated by the CLT.
+A histogram of the simlation means is again plotted to examine the distribution. In the plot below, the histogram was adjusted for y to be between 0 and 1. Scaling the y-axis enabled an overlay of the Normal Distribution `r paste("N(",expdist.mean,",",expdist.var,")",sep="")` in red as defined by the Central Limit Theorem. A curve is fit to the sample distribution and overlayed in blue. This plot shows that the distribution is approximately normal as stated by the CLT.
 
 ```{r}
 plotdist(simdata, lambda, expdist.mean, expdist.var)
@@ -95,9 +95,9 @@ plotdist(simdata, lambda, expdist.mean, expdist.var)
 
 ## Appendix
 
-The report was limited to 3 pages plus up to 3 pages of appendix material if needed (code, figures, etcetera). The code for the two plotting functions was hidden in the document above to keep the length to three pages (minus appendix). The code for the two functions is presented here. 
+The code for the two plotting functions was hidden in the document above to keep the length of the core analysis to three pages (minus appendix). The code for the two functions is presented here. 
 
-Plot a histogram of the samples with the theoretical exponential distribution mean and sample mean.
+Function to plot a histogram of the samples with the theoretical exponential distribution mean and sample mean.
 ```{r}
 plotfn <- function(vals, lmd) {
     plot1 <- ggplot(simdata, aes(x = simdata)) +
@@ -111,7 +111,7 @@ plotfn <- function(vals, lmd) {
 }
 ```
 
-Plot a histogram of the samples with an overlayed curve fit to the histogram and Normal Distribution.
+Function to plot a histogram of the samples with an overlayed curve fit to the histogram and Normal Distribution.
 ```{r}
 plotdist <- function(dst, lmd, nmean, nvar) {
     plot2 <- ggplot(dst) +
