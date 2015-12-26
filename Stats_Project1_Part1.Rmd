@@ -62,7 +62,7 @@ simdata.var <- var(simdata$simdata)
 # Calculate the theoretical variance (E[x bar] = sigma^2/n)
 expdist.var <- expdist.mean^2/draws
 ```
-The theoretical variance of the means of draws from the exponential distribution, Var($\bar{x}$) = (1/n) $\lambda^{-2}$ = `r expdist.var`. The variance of the sample population, $\rm{s}^{2}$ = `r simdata.var`. The difference between the two values is very small: Var($\bar{x}$) - $\rm{s}^{2}$ = `r expdist.var-simdata.var`. The percentage error in this amount is `r ((expdist.var-simdata.var)/expdist.var)*100`%.
+The theoretical variance of the means of draws from the exponential distribution, Var($\bar{x}$) = (1/n) $\lambda^{-2}$ = `r expdist.var`. The variance of the sample population, $\rm{s}^{2}$ = `r simdata.var`. The difference between the two values is very small: Var($\bar{x}$) - $\rm{s}^{2}$ = `r expdist.var-simdata.var`. The percentage difference between the two values is `r ((expdist.var-simdata.var)/expdist.var)*100`%.
 
 ## Distribution
 ```{r echo=FALSE}
